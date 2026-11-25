@@ -1,0 +1,27 @@
+services:
+  - type: web
+    name: school-test-backend
+    runtime: python
+    plan: free
+    buildCommand: "./build.sh"
+    startCommand: "gunicorn config.wsgi:application"
+    healthCheckPath: /
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.3
+      - key: DEBUG
+        value: "False"
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DATABASE_URL
+        fromDatabase:
+          name: school-test-db
+          property: connectionString
+      - key: FRONTEND_URLS
+        sync: false   # Vercel manzilingiz, masalan https://my-app.vercel.app
+      - key: TEACHER_CODE
+        sync: false   # o'qituvchi ro'yxatdan o'tishi uchun maxfiy kod
+
+databases:
+  - name: school-test-db
+    plan: free
